@@ -26,12 +26,9 @@ class Config:
     DB_USERNAME = required_env("DB_USERNAME")
     DB_PASSWORD = os.getenv("DB_PASSWORD", "")
 
-    _DB_USERNAME_ENCODED = quote_plus(DB_USERNAME)
-    _DB_PASSWORD_ENCODED = quote_plus(DB_PASSWORD)
-
     SQLALCHEMY_DATABASE_URI = (
-        f"mysql+pymysql://{_DB_USERNAME_ENCODED}:"
-        f"{_DB_PASSWORD_ENCODED}"
+        f"mysql+pymysql://{quote_plus(DB_USERNAME)}:"
+        f"{quote_plus(DB_PASSWORD)}"
         f"@{DB_HOST}:{DB_PORT}/{DB_DATABASE}"
         "?charset=utf8mb4"
     )
@@ -42,3 +39,8 @@ class Config:
         "pool_pre_ping": True,
         "pool_recycle": 280,
     }
+
+    if os.getenv("DB_SSL", "false").lower() == "true":
+        SQLALCHEMY_ENGINE_OPTIONS["connect_args"] = {
+            "ssl": {},
+        }
