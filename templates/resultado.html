@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Resultado del diagnóstico del Sistema Experto de Red"
+    >
+
+    <title>Resultado del diagnóstico | Sistema Experto de Red</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/styles.css') }}"
+    >
+</head>
+
+<body class="result-page">
+
+    <main class="result-shell">
+
+        <!-- =====================================================
+             CABECERA
+        ====================================================== -->
+        <header class="result-topbar">
+
+            <a
+                href="/"
+                class="brand-link"
+                aria-label="Ir a la página principal"
+            >
+                <span class="brand-icon" aria-hidden="true">
+                    🌐
+                </span>
+
+                <span class="brand-text">
+                    <strong>Sistema Experto</strong>
+                    <small>Diagnóstico de fallas de red</small>
+                </span>
+            </a>
+
+            <nav
+                class="result-actions"
+                aria-label="Acciones del resultado"
+            >
+                <button
+                    type="button"
+                    class="button secondary"
+                    onclick="window.print()"
+                >
+                    🖨️ Imprimir
+                </button>
+
+                <a
+                    href="/"
+                    class="button primary"
+                >
+                    ＋ Nueva consulta
+                </a>
+            </nav>
+
+        </header>
+
+        <!-- =====================================================
+             CONTENIDO PRINCIPAL
+        ====================================================== -->
+        <section class="result-content">
+
+            <!-- Mensajes de error o advertencia -->
+            <div
+                id="alerta"
+                class="alert hidden"
+                role="alert"
+                aria-live="assertive"
+            ></div>
+
+            <!-- =================================================
+                 PANTALLA DE CARGA
+            ================================================== -->
+            <section
+                id="resultado-carga"
+                class="card loading-panel"
+                aria-live="polite"
+            >
+                <div
+                    class="spinner"
+                    aria-hidden="true"
+                ></div>
+
+                <div class="loading-copy">
+                    <p class="eyebrow">
+                        Procesando consulta
+                    </p>
+
+                    <h1>
+                        Preparando el diagnóstico
+                    </h1>
+
+                    <p>
+                        El sistema está analizando las respuestas,
+                        evaluando las reglas y generando las
+                        recomendaciones correspondientes.
+                    </p>
+                </div>
+            </section>
+
+            <!-- =================================================
+                 RESULTADO COMPLETO
+            ================================================== -->
+            <div
+                id="resultado-contenido"
+                class="hidden"
+            >
+
+                <!-- =============================================
+                     RESUMEN PRINCIPAL
+                ============================================== -->
+                <section class="result-summary">
+
+                    <article class="result-hero card">
+
+                        <div class="result-hero-icon" aria-hidden="true">
+                            🩺
+                        </div>
+
+                        <div class="result-hero-copy">
+
+                            <p class="eyebrow">
+                                Diagnóstico principal
+                            </p>
+
+                            <h1 id="diagnostico-principal">
+                                Diagnóstico identificado
+                            </h1>
+
+                            <p
+                                id="descripcion-principal"
+                                class="result-description"
+                            >
+                                Aquí se mostrará la descripción
+                                general del problema detectado.
+                            </p>
+
+                            <div class="result-status-row">
+
+                                <span class="result-status success">
+                                    ✓ Evaluación completada
+                                </span>
+
+                                <span class="result-status neutral">
+                                    Consulta
+                                    #{{ id_consulta }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div
+                            class="confidence-panel"
+                            aria-label="Nivel de confianza del diagnóstico"
+                        >
+                            <div class="confidence-ring">
+                                <strong id="confianza-principal">
+                                    0%
+                                </strong>
+
+                                <span>
+                                    confianza
+                                </span>
+                            </div>
+
+                            <p class="confidence-help">
+                                Indica cuánto coinciden las respuestas
+                                con las reglas de diagnóstico.
+                            </p>
+                        </div>
+
+                    </article>
+
+                </section>
+
+                <!-- =============================================
+                     EXPLICACIÓN Y SEVERIDAD
+                ============================================== -->
+                <section class="result-grid">
+
+                    <!-- Razonamiento -->
+                    <article class="card result-card">
+
+                        <header class="section-heading">
+
+                            <div class="section-icon" aria-hidden="true">
+                                🧠
+                            </div>
+
+                            <div>
+                                <p class="eyebrow">
+                                    Razonamiento del sistema
+                                </p>
+
+                                <h2>
+                                    ¿Por qué se obtuvo este resultado?
+                                </h2>
+                            </div>
+
+                        </header>
+
+                        <div class="explanation-box">
+
+                            <p
+                                id="explicacion-principal"
+                                class="explanation"
+                            >
+                                El sistema mostrará aquí las respuestas
+                                y condiciones que activaron la regla
+                                principal.
+                            </p>
+
+                        </div>
+
+                        <aside class="information-note">
+                            <span aria-hidden="true">ℹ️</span>
+
+                            <p>
+                                El diagnóstico se obtiene comparando
+                                las respuestas registradas con las
+                                condiciones de las reglas almacenadas
+                                en la base de conocimiento.
+                            </p>
+                        </aside>
+
+                    </article>
+
+                    <!-- Severidad -->
+                    <article class="card result-card">
+
+                        <header class="section-heading">
+
+                            <div class="section-icon" aria-hidden="true">
+                                🚦
+                            </div>
+
+                            <div>
+                                <p class="eyebrow">
+                                    Nivel de atención
+                                </p>
+
+                                <h2>
+                                    Severidad del problema
+                                </h2>
+                            </div>
+
+                        </header>
+
+                        <div class="severity-box">
+
+                            <div class="severity-header">
+
+                                <span>
+                                    Nivel identificado
+                                </span>
+
+                                <span
+                                    id="nivel-severidad"
+                                    class="severity-badge"
+                                >
+                                    MEDIO
+                                </span>
+
+                            </div>
+
+                            <div class="severity-description">
+
+                                <h3>
+                                    ¿Qué debe hacer?
+                                </h3>
+
+                                <p id="texto-escalamiento">
+                                    Aquí se mostrará si el problema puede
+                                    resolverse directamente o debe ser
+                                    atendido por personal técnico.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+                <!-- =============================================
+                     RECOMENDACIONES
+                ============================================== -->
+                <section class="card recommendations-section">
+
+                    <header class="section-heading">
+
+                        <div class="section-icon" aria-hidden="true">
+                            🛠️
+                        </div>
+
+                        <div>
+                            <p class="eyebrow">
+                                Plan de solución
+                            </p>
+
+                            <h2>
+                                Acciones recomendadas
+                            </h2>
+
+                            <p class="section-description">
+                                Realice las acciones en el orden indicado.
+                                Después de cada paso, compruebe si el problema
+                                fue solucionado.
+                            </p>
+                        </div>
+
+                    </header>
+
+                    <div
+                        id="lista-recomendaciones"
+                        class="recommendation-list"
+                    >
+                        <!-- resultado.js insertará aquí las recomendaciones -->
+                    </div>
+
+                    <aside class="warning-note">
+                        <span aria-hidden="true">⚠️</span>
+
+                        <div>
+                            <strong>
+                                Recomendación de seguridad
+                            </strong>
+
+                            <p>
+                                No desconecte equipos, cables o dispositivos
+                                desconocidos sin autorización del responsable
+                                de la red.
+                            </p>
+                        </div>
+                    </aside>
+
+                </section>
+
+                <!-- =============================================
+                     OTROS DIAGNÓSTICOS
+                ============================================== -->
+                <section class="card alternatives-section">
+
+                    <header class="section-heading">
+
+                        <div class="section-icon" aria-hidden="true">
+                            🔎
+                        </div>
+
+                        <div>
+                            <p class="eyebrow">
+                                Resultados complementarios
+                            </p>
+
+                            <h2>
+                                Otros diagnósticos compatibles
+                            </h2>
+
+                            <p class="section-description">
+                                Estas alternativas también coincidieron
+                                parcialmente con las respuestas, pero tienen
+                                menor nivel de confianza que el diagnóstico
+                                principal.
+                            </p>
+                        </div>
+
+                    </header>
+
+                    <div
+                        id="lista-resultados"
+                        class="diagnosis-list"
+                    >
+                        <!-- resultado.js insertará aquí los resultados -->
+                    </div>
+
+                </section>
+
+                <!-- =============================================
+                     ACCIONES FINALES
+                ============================================== -->
+                <section class="result-footer-actions card">
+
+                    <div class="result-footer-copy">
+
+                        <h2>
+                            ¿El problema continúa?
+                        </h2>
+
+                        <p>
+                            Revise las recomendaciones, vuelva a realizar
+                            las comprobaciones o inicie una nueva consulta
+                            con información adicional.
+                        </p>
+
+                    </div>
+
+                    <div class="result-footer-buttons">
+
+                        <button
+                            type="button"
+                            class="button secondary"
+                            onclick="window.print()"
+                        >
+                            🖨️ Imprimir resultado
+                        </button>
+
+                        <a
+                            href="/"
+                            class="button primary"
+                        >
+                            Nueva consulta
+                        </a>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ID de la consulta enviado desde Flask -->
+    <script>
+        window.ID_CONSULTA = {{ id_consulta | tojson }};
+    </script>
+
+    <script
+        src="{{ url_for('static', filename='js/resultado.js') }}"
+        defer
+    ></script>
+
+</body>
+</html>

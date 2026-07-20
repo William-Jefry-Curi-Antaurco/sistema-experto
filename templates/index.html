@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Experto de Diagnóstico de Red</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <main class="app-container">
+        <header class="main-header">
+            <div>
+                <span class="header-label">Sistema experto</span>
+                <h1>Diagnóstico de problemas de conexión</h1>
+                <p>
+                    Responde preguntas sencillas sobre lo que está ocurriendo.
+                    El sistema utilizará los síntomas registrados en la base de datos.
+                </p>
+            </div>
+
+            <div class="mode-switch" aria-label="Modo de uso">
+                <button id="btn-modo-basico" type="button" class="mode-button active">
+                    Modo básico
+                </button>
+                <button id="btn-modo-tecnico" type="button" class="mode-button">
+                    Modo técnico
+                </button>
+            </div>
+        </header>
+
+        <div id="alerta" class="alert hidden" role="alert"></div>
+
+        <section id="panel-inicio" class="card">
+            <form id="form-consulta" novalidate>
+                <div class="field-group">
+                    <label for="nombre_usuario">Nombre del usuario</label>
+                    <input
+                        id="nombre_usuario"
+                        name="nombre_usuario"
+                        type="text"
+                        maxlength="150"
+                        placeholder="Ingrese su nombre"
+                        required
+                    >
+                </div>
+
+                <div class="field-group">
+                    <label for="descripcion_problema">
+                        Descripción adicional
+                        <span class="optional-label">Opcional</span>
+                    </label>
+                    <textarea
+                        id="descripcion_problema"
+                        name="descripcion_problema"
+                        rows="4"
+                        placeholder="Ejemplo: El problema comenzó esta mañana y afecta a mi laptop."
+                    ></textarea>
+                </div>
+
+                <button class="button primary full" type="submit">
+                    Iniciar diagnóstico
+                </button>
+            </form>
+        </section>
+
+        <section id="panel-seleccion-problema" class="hidden">
+            <div class="section-intro">
+                <span class="header-label">Paso inicial</span>
+                <h2>¿Qué problema está presentando?</h2>
+                <p>Seleccione la opción que mejor describa la situación.</p>
+            </div>
+
+            <div id="problemas-principales" class="problem-grid"></div>
+        </section>
+
+        <section id="panel-preguntas-basico" class="hidden">
+            <div class="guided-header">
+                <div>
+                    <span class="header-label">Evaluación guiada</span>
+                    <h2 id="titulo-problema-seleccionado">Diagnóstico</h2>
+                    <p id="descripcion-problema-seleccionado"></p>
+                </div>
+
+                <div class="counter-box">
+                    <strong id="contador-basico">0/0</strong>
+                    <span>respondidas</span>
+                </div>
+            </div>
+
+            <div class="progress-track">
+                <div id="barra-progreso-basico" class="progress-bar"></div>
+            </div>
+
+            <section id="tarjeta-pregunta-basico" class="card guided-question-card">
+                <span id="categoria-basico" class="question-category"></span>
+                <h3 id="pregunta-basico">Cargando pregunta...</h3>
+                <p id="ayuda-basico" class="question-help"></p>
+
+                <details id="detalle-ayuda" class="help-details hidden">
+                    <summary>¿Cómo puedo comprobarlo?</summary>
+                    <p id="texto-ayuda-comprobacion"></p>
+                </details>
+
+                <div class="answer-grid">
+                    <button type="button" class="answer-button yes" data-respuesta-basica="SI">
+                        <span class="answer-icon">✓</span>
+                        <strong>Sí</strong>
+                        <small>La condición se presenta.</small>
+                    </button>
+
+                    <button type="button" class="answer-button no" data-respuesta-basica="NO">
+                        <span class="answer-icon">×</span>
+                        <strong>No</strong>
+                        <small>La condición no se presenta.</small>
+                    </button>
+
+                    <button type="button" class="answer-button unknown" data-respuesta-basica="NO_SE">
+                        <span class="answer-icon">?</span>
+                        <strong>No puedo comprobarlo</strong>
+                        <small>El sistema lo tratará como desconocido.</small>
+                    </button>
+                </div>
+
+                <div class="question-actions">
+                    <button id="btn-volver-problemas" type="button" class="button secondary">
+                        Cambiar problema
+                    </button>
+
+                    <button id="btn-anterior-basico" type="button" class="button secondary">
+                        Anterior
+                    </button>
+
+                    <button id="btn-evaluar-basico" type="button" class="button primary hidden">
+                        Generar diagnóstico
+                    </button>
+                </div>
+            </section>
+        </section>
+
+        <section id="panel-tecnico" class="hidden">
+            <div class="guided-header">
+                <div>
+                    <span class="header-label">Modo técnico</span>
+                    <h2>Revisión completa de síntomas</h2>
+                    <p>
+                        Busca, filtra y responde directamente los síntomas registrados.
+                    </p>
+                </div>
+
+                <div class="counter-box">
+                    <strong id="contador-tecnico">0</strong>
+                    <span>respondidos</span>
+                </div>
+            </div>
+
+            <div class="filter-panel card">
+                <div class="field-group">
+                    <label for="buscar-sintoma">Buscar síntoma</label>
+                    <input
+                        id="buscar-sintoma"
+                        type="search"
+                        placeholder="Ejemplo: router, WiFi, DHCP, DNS..."
+                    >
+                </div>
+
+                <div class="field-group">
+                    <label for="filtro-categoria">Categoría</label>
+                    <select id="filtro-categoria">
+                        <option value="">Todas las categorías</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="lista-sintomas" class="symptoms-container"></div>
+
+            <div class="form-actions card">
+                <button id="btn-limpiar" type="button" class="button secondary">
+                    Limpiar respuestas
+                </button>
+
+                <button id="btn-evaluar-tecnico" type="button" class="button primary">
+                    Generar diagnóstico
+                </button>
+            </div>
+        </section>
+
+        <section id="panel-carga" class="card loading-panel hidden">
+            <div class="spinner"></div>
+            <h2>Analizando respuestas</h2>
+            <p>
+                El motor de inferencia está evaluando las reglas de la base de conocimiento.
+            </p>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</body>
+</html>
